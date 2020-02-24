@@ -1,4 +1,42 @@
-<h1>FILES</h1>
-{{ files }}
+<!doctype html>
+<html>
+    <head>        
+        <script type="text/javascript">
+            function loadXMLDoc() {
+                var xmlhttp = new XMLHttpRequest();
+                var url = "{% url 'tail_log' %}";
 
+                xmlhttp.onreadystatechange = function() {
+                    if (xmlhttp.readyState == XMLHttpRequest.DONE) {   // XMLHttpRequest.DONE == 4
+                    if (xmlhttp.status == 200) {
+                        document.getElementById("log_display").innerHTML = xmlhttp.responseText;
+                    }
+                    else if (xmlhttp.status == 400) {
+                        alert('There was an error 400');
+                    }
+                    else {
+                        alert('something else other than 200 was returned');
+                    }
+                    }
+                };
+            
+                xmlhttp.open("GET", url, true);
+                xmlhttp.send();
 
+                //calls the funciton every 5 secs after you start
+                setTimeout(loadXMLDoc, 5000);
+            }
+
+        </script>
+    </head>
+    <body>
+
+        <h1>RESULT OF UNIX COMMAND (STATIC)</h1>
+        {{ files }}
+
+        <h1>LOG (LIVE)</h1>
+        <div id="log_display"></div>
+
+        <button onclick="loadXMLDoc()">Click me</button> 
+</body>
+</html>
